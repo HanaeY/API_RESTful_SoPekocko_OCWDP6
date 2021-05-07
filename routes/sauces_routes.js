@@ -1,5 +1,4 @@
 const express = require('express');
-const { createSauce } = require('../controllers/sauces_ctrl');
 const router = express.Router();
 
 const sauceCtrl = require('../controllers/sauces_ctrl');

@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 // body-parser permet de rendre le corps de la requête exploitable
 const mongoose = require('mongoose');
 
+const userRoutes = require('./routes/user_routes');
 const sauceRoutes = require('./routes/sauces_routes');
 
 mongoose.connect('mongodb+srv://SuperAdmin:fONRBkxvs5v7CV1v@cluster0.blsha.mongodb.net/SoPekockoDatabase?retryWrites=true&w=majority',
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 // la méthode json de l'objet body-parser va transformerle corps des requêtes en objets json
 app.use(bodyParser.json());
 
+app.use('/api/auth', userRoutes);
 app.use('/api/sauces', sauceRoutes);
 
 module.exports = app;

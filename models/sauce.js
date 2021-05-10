@@ -9,8 +9,8 @@ const sauceSchema = mongoose.Schema({
     manufacturer : {type : String, required : true},
     description : {type : String, required : true},
     imageUrl : {type : String, required : true},
+    //mainIngredient : {type : String, required : true},
     heat : {type : Number, required : true}, 
-    // TO DO : ajouter des val min et max : 0 à 10 pour le heat ou côté front ? 
     likes : {type : Number, required : true}, 
     dislikes : {type : Number, required : true}, 
     userLiked : {type : [String], required : true},

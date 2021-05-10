@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 // body-parser permet de rendre le corps de la requête exploitable
 const mongoose = require('mongoose');
+const path = require('path');
 
 const userRoutes = require('./routes/user_routes');
 const sauceRoutes = require('./routes/sauces_routes');
@@ -25,6 +26,8 @@ app.use((req, res, next) => {
 
 // la méthode json de l'objet body-parser va transformerle corps des requêtes en objets json
 app.use(bodyParser.json());
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/auth', userRoutes);
 app.use('/api/sauces', sauceRoutes);

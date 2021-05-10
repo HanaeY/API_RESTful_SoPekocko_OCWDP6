@@ -1,16 +1,19 @@
 const Sauce = require('../models/sauce');
+const fs = require('fs');
 
 exports.createSauce = (req, res, next) => {
+    const sauceObject = JSON.parse(req.body.sauce);
     // supprimer l'id envoyé par le frond (car on utilisera l'id généré pa MongoDB)
-    delete req.body._id;
+    delete sauceObject._id;
     // création d'une nouvelle instance du modèle Sauce
     const sauce = new Sauce({
-        ...req.body
+        ...sauceObject,
+        imageUrl : `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
     sauce.likes = 0;
     sauce.dislikes = 0;
-    sauce.userLiked =[];
-    sauce.userDisliked =[];
+    sauce.userLiked = [];
+    sauce.userDisliked = [];
 
     // utilisation de la méthode save de l'instance pour enregistrer le nouvel objet dans la base
     // .save retourne une Promise
@@ -20,15 +23,27 @@ exports.createSauce = (req, res, next) => {
 };
 
 exports.modifySauce = (req, res, next) => {
-    Sauce.updateOne({_id : req.params.id}, {...req.body, _id: req.params.id})
+    const sauceObject = req.file ? 
+        {...JSON.parse(req.body.sauce),
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`   
+        } : {...req.body};
+    Sauce.updateOne({_id : req.params.id}, {...sauceObject, _id: req.params.id})
         .then(() => res.status(200).json({message : 'sauce modifiée !'}))
         .catch(error => res.status(400).json({error}));
 };
 
 exports.deleteSauce = (req, res, next) => {
-    Sauce.deleteOne({_id : req.params.id})
-        .then(() => res.status(200).json({message : 'sauce supprimée !'}))
-        .catch(error => res.status(400).json({error}));
+    Sauce.findOne({_id : req.params.id})
+    .then(sauce => {
+        const filename = sauce.imageUrl.split('/images/')[1];
+        fs.unlink(`./images/${filename}`, () => {
+            Sauce.deleteOne({_id : req.params.id})
+            .then(() => res.status(200).json({message : 'sauce supprimée !'}))
+            .catch(error => res.status(400).json({error}));
+        })
+    })
+    .catch(error => res.status(500).json({error}));
+
 };
 
 exports.getAllSauces = (req, res, next) => {

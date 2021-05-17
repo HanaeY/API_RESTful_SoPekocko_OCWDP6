@@ -85,6 +85,8 @@ exports.likeASauce = (req, res, next) => {
                         Sauce.updateOne({_id: req.params.id}, sauce)
                             .then(() => res.status(200).json({message : "J'aime ajouté !"}))
                             .catch(error => res.status(400).json({error}));
+                    } else {
+                        throw {error: "Cette action n'est pas possible !"}; 
                     }
                     break; 
                 case -1 :
@@ -95,6 +97,8 @@ exports.likeASauce = (req, res, next) => {
                         Sauce.updateOne({_id: req.params.id}, sauce)
                             .then(() => res.status(200).json({message : "je n'aime pas ajouté !"}))
                             .catch(error => res.status(400).json({error}));
+                    } else {
+                        throw {error: "Cette action n'est pas possible !"}; 
                     }
                     break;
                 case 0 : 
@@ -115,6 +119,8 @@ exports.likeASauce = (req, res, next) => {
                         Sauce.updateOne({_id: req.params.id}, sauce)
                         .then(() => res.status(200).json({message : "je n'aime pas supprimé !"}))
                         .catch(error => res.status(400).json({error}));
+                    } else if(usersLikedIndex == -1 && usersDislikedIndex == -1) {
+                        throw {error: "Cette action n'est pas possible !"}; 
                     }
                     break;       
                 default : 

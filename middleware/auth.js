@@ -1,14 +1,14 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken'); // import du module jwt pour vérifier le token du header de la requête
 
 module.exports = (req, res, next) => {
-    try {
-        const token = req.headers.authorization.split(' ')[1];
-        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
+    try { // on utilise try/catch car il y a un gros risque d'erreurs 
+        const token = req.headers.authorization.split(' ')[1]; // on retire le mot bearer avant le token dans le header author. pour avoir le token
+        const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET'); // la fn verify permet de décoder le token (et s'il n'est pas valide une erreur est générée)
         const userId = decodedToken.userId;
-        if(req.body.userId && req.body.userId !== userId) {
+        if(req.body.userId && req.body.userId !== userId) { // on compare l'id user du token avec l'id user du corps de la requête 
             throw 'user id non valable !';
         } else {
-            next();
+            next(); // si la requête est authentifiée on passe au middleware suivant 
         }
     } catch (error) {
         res.status(401).json({error : error | 'requête non authentifiée !'});

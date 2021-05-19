@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken'); // import du module jwt pour vérifier le token du header de la requête
 
 module.exports = (req, res, next) => {
-    try { // on utilise try/catch car il y a un gros risque d'erreurs 
+    try { // on utilise try/catch car il y a un important risque d'erreurs 
         const token = req.headers.authorization.split(' ')[1]; // on retire le mot bearer avant le token dans le header author. pour avoir le token
         const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET'); // la fn verify permet de décoder le token (et s'il n'est pas valide une erreur est générée)
         const userId = decodedToken.userId;

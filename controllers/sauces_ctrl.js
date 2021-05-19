@@ -4,13 +4,17 @@ const fs = require('fs'); // module permettant la gestion du système de fichier
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id; // suppression de l'id envoyé par le frond (car on utilisera l'id généré pa MongoDB)
-    const sauce = new Sauce({ // création d'une nouvelle instance du modèle Sauce
+    const imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    const sauce = new Sauce({ // création d'une nouvelle instance du modèle Sauce + validation des données (>> mongoose-validator.js)
         ...sauceObject, // on applique les champs de la requête
-        imageUrl : `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        imageUrl : imgUrl,
     });
     sauce.save() // enregistre sauce dans la base de données et retourne une promesse ...
         .then(() => res.status(201).json({message : 'objet créé !'}))
-        .catch(error => res.status(400).json({error}));
+        .catch((error) => {
+            const filename = imgUrl.split('/images/')[1]; // si les entrées ne sont pas validées on supprime l'image
+            fs.unlink(`./images/${filename}`, () => res.status(400).json({error}));
+            });
 };
 
 exports.modifySauce = (req, res, next) => {

@@ -5,10 +5,11 @@ const router = express.Router(); // création d'un routeur express
 const sauceCtrl = require('../controllers/sauces_ctrl');
 const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
+const validator = require('../middleware/sauce_validator');
 
 // détail des routes pour les requêtes envoyées à '/api/auth' + extension URI
 router.post('/', auth, multer, sauceCtrl.createSauce);
-router.put('/:id', auth, multer, sauceCtrl.modifySauce);
+router.put('/:id', auth, validator.validateInputs, multer, sauceCtrl.modifySauce);
 router.delete('/:id', auth, sauceCtrl.deleteSauce);
 router.get('/', auth, sauceCtrl.getAllSauces);
 router.get('/:id', auth, sauceCtrl.getOneSauce);

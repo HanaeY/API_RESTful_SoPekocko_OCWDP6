@@ -13,11 +13,12 @@ const userRoutes = require('./routes/user_routes');
 const sauceRoutes = require('./routes/sauces_routes');
 
 // connexion de l'application à la base de données 
-mongoose.connect('mongodb+srv://SuperAdmin:fONRBkxvs5v7CV1v@cluster0.blsha.mongodb.net/SoPekockoDatabase?retryWrites=true&w=majority',
+require('dotenv').config();
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.blsha.mongodb.net/${process.env.DB_DATABASE}?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch((error) => console.log(error | 'Connexion à MongoDB échouée !'));
+  .catch((error) => console.log('Connexion à MongoDB échouée !', error));
 
 
 const app = express(); // initialisation de l'application express

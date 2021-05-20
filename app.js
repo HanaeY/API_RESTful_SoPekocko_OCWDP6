@@ -33,7 +33,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(bodyParser.json()); // la méthode json de l'objet body-parser va transformer le corps des requêtes en objets json
+app.use(express.urlencoded({ extended: true, limit: "1kb" }));
+app.use(express.json({ limit: "1kb" })); // parse le body des requêtes et limite leur taille à 1kb
 
 app.use('/images', express.static(path.join(__dirname, 'images'))); // lorsque la route /images est appelée, permet de servir le dossier statique images
 

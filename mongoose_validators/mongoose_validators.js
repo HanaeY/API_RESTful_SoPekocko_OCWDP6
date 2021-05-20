@@ -7,9 +7,9 @@ exports.nameValidator = [
         message: 'ce champ doit contenir entre 3 et 50 caractères',
     }),
     validate({
-        validator: 'isAlphanumeric',
-        passIsEmpty: true,
-        message: 'ce champ ne peut contenir que des chiffres et des lettres',
+        validator: 'matches',
+        arguments: /^[a-zA-Z\d\-_.,!?'\s]+$/i,
+        message: 'La saisie contient des caractères spéciaux interdits',
     }),
 ];
 

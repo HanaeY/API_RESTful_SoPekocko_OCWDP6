@@ -20,24 +20,25 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => {
     User.findOne({email : Maskdata.maskEmail2(req.body.email)}) // on recherche l'utilisateur dans la base avec l'email de la requête
         .then(user => {
-            if(!user) { // cas où le mail n'a pas permis de trouver un utlisateur
+            if(!user) { // cas où on ne trouve pas d'utilisateur avec l'email donné
                 res.status(401).json({message : 'utilisateur non trouvé !'});
             }
             bcrypt.compare(req.body.password, user.password) // si utilisateur trouvé, on compare les hashs des mots de passe de la base et de la requête
                 .then(valid => { //le promesse retourne un bouléen 
-                    if(!valid) {
+                    if(!valid) { // pas où les deux hash ne correspondent pas
                         res.status(401).json({message : 'mot de passe incorrect !'});  
+                    } else {
+                        res.status(200).json({ // si le mot de passe est bon, on retourne un token d'authentification qui sera valable 24h
+                            userId : user._id,
+                            token : jwt.sign(
+                                {userId : user._id}, // le payload qui sera intégré au token
+                                'process.env.SECRET_KEY', 
+                                {expiresIn: '24h'}
+                            )
+                        });
                     }
-                    res.status(200).json({ // si le mot de passe est bon, on retourne un token d'authentification qui sera valable 24h
-                        userId : user._id,
-                        token : jwt.sign(
-                            {userId : user._id}, // le payload qui sera intégré au token
-                            'RANDOM_TOKEN_SECRET', // à remplacer par une clé secrète plus complexe en production 
-                            {expiresIn: '24h'}
-                        )
-                    });
                 })
-                .catch(error => res.status(500).json({error}));           
+                .catch(error => res.status(500).json({error})); // impossible de comparer les hash de mot de passe           
         })
-        .catch(error => res.status(500).json({error}));
+        .catch(error => res.status(500).json({error})); // impossible de rechercher l'utilisateur avec l'email donné
 };

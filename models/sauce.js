@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const validator = require('../mongoose_validators/mongoose_validators');
+const mongoose = require('mongoose'); // import de mongoose qui permettra de créer des schémas de données et des modèles
+const validator = require('../mongoose_validators/mongoose_validators'); // ce module permettra de valider les données 
 
 // Fonction schema du package mongoose à laquelle on passe un objet de configuration 
 // permet de définir les attributs des param de l'objet 
@@ -17,4 +17,4 @@ const sauceSchema = mongoose.Schema({
     usersDisliked : {type : [String], required : true, default: []},
 });
 
-module.exports = mongoose.model('Sauce', sauceSchema);
+module.exports = mongoose.model('Sauce', sauceSchema); // on créé un modèle Sauce en utilisant le schéma sauceSchema

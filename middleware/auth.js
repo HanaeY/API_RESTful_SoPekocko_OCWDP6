@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1]; // on retire le mot bearer avant le token dans le header author. pour avoir le token
         const decodedToken = jwt.verify(token, process.env.SECRET_KEY); // la fn verify permet de décoder le token (et s'il n'est pas valide une erreur est générée)
         const userId = decodedToken.userId;
-        if(req.body.userId && req.body.userId !== userId) { // on compare l'id user du token avec l'id user du corps de la requête 
+        if(req.body.userId && req.body.userId !== userId) { // on compare l'id user du token avec l'id user du corps de la requête s'il y en a un
             throw 'user id non valable !';
         } else {
             next(); // si la requête est authentifiée on passe au middleware suivant 
@@ -14,3 +14,5 @@ module.exports = (req, res, next) => {
         res.status(401).json({error : error | 'requête non authentifiée !'});
     }
 };
+
+// ici console.log(req.body.userId) donne bien l'id pour les req qui ont un userId dans leur body... 

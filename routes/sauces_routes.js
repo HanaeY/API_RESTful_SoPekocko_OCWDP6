@@ -14,5 +14,6 @@ router.delete('/:id', auth, sauceCtrl.deleteSauce);
 router.get('/', auth, sauceCtrl.getAllSauces);
 router.get('/:id', auth, sauceCtrl.getOneSauce);
 router.post('/:id/like', auth, sauceCtrl.likeASauce);
+// on retrouve ces fonctions dans le dossier controller et middlewares
 
 module.exports = router; // export du routeur qui sera importé dans le fichier app.js

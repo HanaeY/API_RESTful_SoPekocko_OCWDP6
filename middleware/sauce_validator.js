@@ -1,18 +1,22 @@
-const validator = require('validator');
+const fs = require('fs');
 
 exports.validateInputs = (req, res, next) => {
-    console.log('req.body.sauce: ', req.body.sauce); // s'il y a un fichier dans la req, donne 'undefined'
-    console.log('req.body: ', req.body); // si pas de fichier dans la req, donne bien l'objet attendu
     const sauceToCheck = req.file ? JSON.parse(req.body.sauce) : req.body;
-    if(!validator.isAlpha(sauceToCheck.name) || !(3 < sauceToCheck.name < 51)) {
-        res.status(401).json({message: "le champ 'name' ne doit contenir que des lettres et entre 3 et 50 caractères"});
-    } else if(!sauceToCheck.manufacturer.match(/^[a-zA-Z\d\-_.,!?'\s]+$/i) || !(3 < sauceToCheck.manufacturer < 51)) {
-        res.status(401).json({message: "le champ 'manufacturer' doit compter entre 3 et 50 caractères et n'accepte pas les caractères spéciaux"});
-    } else if(!sauceToCheck.mainPepper.match(/^[a-zA-Z\d\-_.,!?'\s]+$/i) || !(3 < sauceToCheck.mainPepper < 51)) {
-        res.status(401).json({message: "le champ 'description' doit compter entre 3 et 400 caractères et n'accepte pas les caractères spéciaux"});
-    } else if(!sauceToCheck.description.match(/^[a-zA-Z\d\-_.,!?'\s]+$/i) || !(3 < sauceToCheck.description < 401)) {
-        res.status(401).json({message: "le champ 'description' doit compter entre 3 et 400 caractères et n'accepte pas les caractères spéciaux"});
-    } else {
+    // on vérifie tous les champs
+    if(!sauceToCheck.name.match(/^[a-zA-Z\d\-_.,!'\s]+$/i) || !(3 < sauceToCheck.name < 51) || 
+        !sauceToCheck.manufacturer.match(/^[a-zA-Z\d\-_.,!?'\s]+$/i) || !(3 < sauceToCheck.manufacturer < 51) ||
+        !sauceToCheck.mainPepper.match(/^[a-zA-Z\d\-_.,!?'\s]+$/i) || !(3 < sauceToCheck.mainPepper < 51) ||
+        !sauceToCheck.description.match(/^[a-zA-Z\d\-_.,!?'\s]+$/i) || !(3 < sauceToCheck.description < 401)) {
+            const errorMessage = "les champs ne doivent pas contenir de caractères spéciaux et doivent compter entre 3 et 400 caractères max !";
+            // si les entrées ne sont pas valides on supprime l'image
+            if(req.file) {
+                const imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`;
+                const filename = imgUrl.split('/images/')[1]; 
+                fs.unlink(`./images/${filename}`, () => res.status(401).json({message: errorMessage}));
+            } else {
+                res.status(401).json({message: errorMessage});
+            }   
+    } else { // sinon on passe au prochain middleware
         next();
     }
 };

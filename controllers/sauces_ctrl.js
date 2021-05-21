@@ -11,10 +11,7 @@ exports.createSauce = (req, res, next) => {
     });
     sauce.save() // enregistre sauce dans la base de données et retourne une promesse ...
         .then(() => res.status(201).json({message : 'objet créé !'}))
-        .catch((error) => {
-            const filename = imgUrl.split('/images/')[1]; // si les entrées ne sont pas validées on supprime l'image
-            fs.unlink(`./images/${filename}`, () => res.status(400).json({error}));
-            });
+        .catch((error) => res.status(400).json({error}));
 };
 
 exports.modifySauce = (req, res, next) => {
@@ -30,7 +27,6 @@ exports.modifySauce = (req, res, next) => {
             const formerFile = sauce.imageUrl.split('/images/')[1]; // un récupère le nom de l'image actuelle
             fs.unlink(`./images/${formerFile}`, () => { // on supprime l'image actuel du fichier images 
                 sauceObject = JSON.parse(req.body.sauce); // la sauce est au format form-data, on la convertit en objet json
-                //console.log(sauceObject);
                 sauceObject.imageUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`; // on écrit l'url de l'image
                 Sauce.updateOne({_id : req.params.id}, {...sauceObject, _id: req.params.id}) 
                     .then(() => res.status(200).json({message : 'sauce modifiée !'}))

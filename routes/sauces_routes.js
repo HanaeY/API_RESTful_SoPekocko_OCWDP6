@@ -8,7 +8,7 @@ const multer = require('../middleware/multer-config');
 const validator = require('../middleware/sauce_validator');
 
 // détail des routes pour les requêtes envoyées à '/api/auth' + extension URI
-router.post('/', auth, multer, sauceCtrl.createSauce); 
+router.post('/', auth, multer, validator.validateInputs, sauceCtrl.createSauce); 
 router.put('/:id', auth, multer, validator.validateInputs, sauceCtrl.modifySauce);
 router.delete('/:id', auth, sauceCtrl.deleteSauce);
 router.get('/', auth, sauceCtrl.getAllSauces);

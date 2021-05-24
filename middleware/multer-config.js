@@ -19,7 +19,7 @@ const storage = multer.diskStorage({// la fonction diskStorage permet de gérer 
     }
 });
 
-const maxSize = 1 * 1024 * 1024;
+const maxSize = 1 * 1024 * 1024; // 1MB
 
 module.exports = multer({storage: storage, limits: {fileSize: maxSize}}).single('image'); // le middleware multer sera importé dans le routeur sauces
 // on limite la taille des fichiers grâce à l'option limits de multer, 

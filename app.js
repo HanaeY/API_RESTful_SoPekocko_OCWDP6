@@ -2,8 +2,6 @@
 
 const express = require('express'); // import du framework express qui permet de créer l'application express
 
-const bodyParser = require('body-parser'); // import du module body-parser qui va rendre le corps de la requête exploitable
-
 const mongoose = require('mongoose'); // import du package mongoose qui va faciliter les interactions avec la base de données 
 
 const path = require('path'); // donne accès au chemin du système de fichiers

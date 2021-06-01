@@ -5,7 +5,7 @@ exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id; // suppression de l'id envoyé par le frond (car on utilisera l'id généré pa MongoDB)
     const imgUrl = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    const sauce = new Sauce({ // création d'une nouvelle instance du modèle Sauce + validation des données (>> mongoose-validator.js)
+    const sauce = new Sauce({ // création d'une nouvelle instance du modèle Sauce 
         ...sauceObject, // on applique les champs de la requête
         imageUrl : imgUrl,
     });

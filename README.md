@@ -2,7 +2,7 @@
 Projet réalisé dans le cadre du parcours de formation "web développeur" Openclassrooms (projet n°6). 
 ## Objectifs
 Construire une API sécurisée ([Documentation API](https://s3-eu-west-1.amazonaws.com/course.oc-static.com/projects/DWJ_FR_P6/Guidelines+API.pdf)) respectant les critères de l'OWASP et les contraintes du RGPD.
-Les compétences qui seront évaluées sont : 
+Les compétences mises à profit sont : 
 * Mettre en œuvre des opérations CRUD de manière sécurisée
 * Stocker des données de manière sécurisée
 * Implémenter un modèle logique de données conformément à la réglementation
